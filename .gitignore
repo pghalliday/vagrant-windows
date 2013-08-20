@@ -16,4 +16,5 @@ test/tmp
 test/version_tmp
 tmp
 .vagrant
-Vagrantfile
+Berksfile.lock
+.DS_Store
