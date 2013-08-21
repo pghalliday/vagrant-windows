@@ -20,6 +20,15 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision :chef_solo do |chef|
+    # Firewall blocks git protocol
+    chef.json = {
+      "rbenv" => {
+        "git_repository" => "https://github.com/sstephenson/rbenv.git"
+      },
+      "ruby_build" => {
+        "git_repository" => "https://github.com/sstephenson/ruby-build.git"
+      }
+    }
     chef.run_list = [
       "recipe[apt]",
       "recipe[vagrant-windows]"

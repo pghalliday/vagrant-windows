@@ -6,6 +6,23 @@ Installing Vagrant-Windows
   
 To install you need to execute `vagrant plugin install vagrant-windows`. For Vagrant 1.0 execute `vagrant plugin install vagrant-windows --plugin-version 0.1.2`.
 
+To install from source
+----------------------
+
+With ruby 1.9.3-p448
+
+```
+$ bundle install
+$ bundle exec rake
+$ vagrant plugin install pkg/vagrant-windows-1.2.0.gem
+```
+
+If you have firewall problems with the git protocol then try this before `bundle install`
+
+```
+$ git config --global url."https://".insteadOf git://
+```
+
 Supported Guest Operating Systems (Your VM)
 ===========================================
 _Does NOT work with Windows 2003 or XP_
