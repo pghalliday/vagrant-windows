@@ -1,6 +1,6 @@
-require "#{Vagrant::source_root}/plugins/provisioners/chef/provisioner/chef_solo"
 require 'tempfile'
-require_relative '../helper'
+require "#{Vagrant::source_root}/plugins/provisioners/chef/provisioner/chef_solo"
+require_relative '../../../../../helper'
 
 module VagrantPlugins
   module Chef
@@ -31,6 +31,7 @@ module VagrantPlugins
           Set-ExecutionPolicy Unrestricted -force;
           #{chef_script_options[:chef_task_ps1]};
           Set-ExecutionPolicy $old -force
+          exit $LASTEXITCODE
           EOH
 
           @config.attempts.times do |attempt|
@@ -40,13 +41,12 @@ module VagrantPlugins
               @machine.env.ui.info I18n.t("vagrant.provisioners.chef.running_solo_again")
             end
 
-            exit_status = @machine.communicate.sudo(command, :error_check => false) do |type, data|
+            exit_status = @machine.communicate.execute(command) do |type, data|
               # Output the data with the proper color based on the stream.
               color = type == :stdout ? :green : :red
 
-              # Note: Be sure to chomp the data to avoid the newlines that the
-              # Chef outputs.
-              @machine.env.ui.info(data.chomp, :color => color, :prefix => false)
+              @machine.env.ui.info(
+                data, :color => color, :new_line => false, :prefix => false)
             end
 
             # There is no need to run Chef again if it converges
@@ -85,6 +85,7 @@ module VagrantPlugins
               :chef_arguments => chef_arguments,
               :chef_task_xml => win_friendly_path("#{@config.provisioning_path}/cheftask.xml"),
               :chef_task_running => win_friendly_path("#{@config.provisioning_path}/cheftask.running"),
+              :chef_task_exitcode => win_friendly_path("#{@config.provisioning_path}/cheftask.exitcode"),
               :chef_task_ps1 => win_friendly_path("#{@config.provisioning_path}/cheftask.ps1"),
               :chef_task_run_ps1 => win_friendly_path("#{@config.provisioning_path}/cheftaskrun.ps1"),
               :chef_stdout_log => win_friendly_path("#{@config.provisioning_path}/chef-solo.log"),
