@@ -9,6 +9,12 @@ $MountPoint = [System.IO.Path]::GetFullPath("<%= options[:mount_point] %>")
 $ShareName = "<%= options[:share_name] %>"
 $VmProviderUncPath = "<%= options[:vm_provider_unc_path] %>"
 
+<% if options[:drive_letter] %>
+$net = $(New-Object -ComObject WScript.Network)
+$net.MapNetworkDrive("<%= options[:drive_letter] %>:", $VmProviderUncPath, $True)
+# & net use <%= options[:drive_letter] %>: $VmProviderUncPath /persistent:yes 2>&1 | out-null
+<% end %>
+
 # https://github.com/BIAINC/vagrant-windows/issues/4
 # Not sure why this works, but it does.
 

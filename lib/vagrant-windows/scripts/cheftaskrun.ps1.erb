@@ -3,6 +3,7 @@ Set-ExecutionPolicy Unrestricted -force;
 
 Try
 {
+  & net use X: "\\vboxsrv\Development"
   "running" | Out-File "<%= options[:chef_task_running] %>"
   $process = (Start-Process "<%= options[:chef_binary_path] %>" -ArgumentList "<%= options[:chef_arguments] %>" -NoNewWindow -PassThru -Wait -RedirectStandardOutput "<%= options[:chef_stdout_log] %>" -RedirectStandardError "<%= options[:chef_stderr_log] %>")
   $exitCode = $process.ExitCode
